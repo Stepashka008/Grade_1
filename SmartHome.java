@@ -1,46 +1,104 @@
 class SmartHome{
 
+    private int count = 0; // Кол-во устройств в доме
     Device[] devices;
 
-    public SmartHome(int count){
-        devices = new Device[count];
+    public SmartHome(int maxCount){
+        devices = new Device[maxCount];
     }
 
-    public void addDevice(String name, boolean status, String color){ // Добавление устройства в массив
-        for(int i = 0; i < devices.length; i++){
-            if(devices[i] == null){
-                devices[i] = new Device(name, status, color);
-                System.out.println(devices[i].getName() + " - Добавлен в массив устройств");
-                break;
+    public void addDevice(String name, boolean status,  String color){ // Добавление устройства в массив
+        Add add = new Add(name, status, color);
+        add.addElement();
+    }
+
+    private class Add{ // Класс для добавления устройства
+
+        String name;
+        boolean status; // Статус по умолчанию выключен
+        String color;
+
+        public Add(String name, boolean status, String color){
+            this.name = name;
+            this.status = status;
+            this.color = color;
+        }
+
+        public void addElement(){
+            try{
+                devices[count] = new Device(name, status, color);
+                System.out.println("Устройство: " + name + " - добавлено в дом");
+                count++;
+            }
+            catch (ArrayIndexOutOfBoundsException ex){
+                System.out.println("Вы добавили максимальное кол-во устройств!");
             }
         }
     }
 
     public void switcDevice(String name){ // Переключение статуса устройства
-        for(int i = 0; i < devices.length; i++){
-            if(devices[i] != null && devices[i].getName().equals(name)){
-                devices[i].setStatus(!devices[i].getStatus());
-                System.out.println("Статус устройства: " + devices[i].getName() + ", переключён на: " + devices[i].getStatus());
-                break;
+        Switc switc = new Switc(name);
+        switc.switcElement();
+    }
+
+    private class Switc{ // Класс для переключения статуса
+
+        String name;
+
+        public Switc(String name){
+            this.name = name;
+        }
+
+        public void switcElement(){
+            for (Device device : devices) { // Заменили for на foreach!!!
+                if (device != null && device.getName().equals(name)) { // equals - сравнение строк
+                    device.setStatus(!device.getStatus());
+                    System.out.println("\nСтатус устройства: " + device.getName() + ", переключён на: " + device.getStatus());
+                    break;
+                }
             }
         }
     }
 
     public void statusCheckDevice(){ // Вывод статуса всех устройств
-        for(int i = 0; i < devices.length; i++){
-            if(devices[i] == null){
-                break;
-            }
-            else{
-                System.out.println("Статус устройства: " + devices[i].getName() + " = " + devices[i].getStatus());
+        CheckStatus checkStatus = new CheckStatus();
+        checkStatus.statusCheck();
+    }
+
+    private class CheckStatus{
+
+        public void statusCheck(){
+            System.out.println("\nВывод статуса всех устройств: "); System.out.println("-------------------------------------");
+            for (Device device : devices) {
+                if (device == null) {
+                    break;
+                } else {
+                    System.out.println("Статус устройства: " + device.getName() + " = " + device.getStatus());
+                    System.out.println("-------------------------------------");
+                }
             }
         }
     }
 
     public void infoDevice(String name){ // Вывод полной информации об устройстве
-        for(int i = 0; i < devices.length; i++){
-            if(devices[i] != null && devices[i].getName() == name){
-                System.out.println("Имя устройства: " + devices[i].getName() + "\nСтатус устройства: " + devices[i].getStatus() + "\nЦвет устройства: " + devices[i].getColor());
+        Info info = new Info(name);
+        info.OpenInfoDevice();
+    }
+
+    private class Info{
+
+        String name;
+
+        public  Info(String name){
+            this.name = name;
+        }
+
+        public void OpenInfoDevice(){
+            System.out.println("\nВывод полной информации об устройстве: ");
+            for (Device device : devices) {
+                if (device != null && device.getName().equals(name)) {
+                    System.out.println("Имя устройства: " + device.getName() + "\nСтатус устройства: " + device.getStatus() + "\nЦвет устройства: " + device.getColor());
+                }
             }
         }
     }

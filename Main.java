@@ -2,8 +2,8 @@ class Main
 {
     public static void main (String[] args)
     {
-        int count = 10; // Кол-во устройств в доме
-        SmartHome smartHome = new SmartHome(count);
+        int maxCount = 10; // Максимальное кол-во устройств в доме
+        SmartHome smartHome = new SmartHome(maxCount);
         smartHome.addDevice("Плита", false, "Серый"); // Добавление устройств
         smartHome.addDevice("Утюг", false, "Белый");
         smartHome.addDevice("Лампа", true, "Коричневый");
