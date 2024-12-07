@@ -1,10 +1,16 @@
+import javax.swing.JOptionPane;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 class SmartHome{
 
     private int count = 0; // Кол-во устройств в доме
-    Device[] devices;
 
-    public SmartHome(int maxCount){
-        devices = new Device[maxCount];
+    List<Device> devices; // Список устройств
+
+    public SmartHome(){
+        devices = new ArrayList<>();
     }
 
     public void addDevice(String name, boolean status,  String color){ // Добавление устройства в массив
@@ -25,20 +31,17 @@ class SmartHome{
         }
 
         public void addElement(){
-            try{
-                devices[count] = new Device(name, status, color);
-                System.out.println("Устройство: " + name + " - добавлено в дом");
-                count++;
-            }
-            catch (ArrayIndexOutOfBoundsException ex){
-                System.out.println("Вы добавили максимальное кол-во устройств!");
-            }
+            devices.add(new Device(name, status, color));
+            System.out.println("Устройство: " + name + " - добавлено в дом");
+            count++;
         }
     }
 
-    public void switcDevice(String name){ // Переключение статуса устройства
-        Switc switc = new Switc(name);
-        switc.switcElement();
+    public void switchDevice(String name){ // Переключение статуса устройства
+        if (foundDevice(name)){ // Если устройство вообще есть
+            Switc switc = new Switc(name);
+            switc.switcElement();
+        }
     }
 
     private class Switc{ // Класс для переключения статуса
@@ -50,8 +53,8 @@ class SmartHome{
         }
 
         public void switcElement(){
-            for (Device device : devices) { // Заменили for на foreach!!!
-                if (device != null && device.getName().equals(name)) { // equals - сравнение строк
+            for (Device device : devices) { // foreach, device - наш объект
+                if (device.getName().equals(name)) { // equals - сравнение строк
                     device.setStatus(!device.getStatus());
                     System.out.println("\nСтатус устройства: " + device.getName() + ", переключён на: " + device.getStatus());
                     break;
@@ -70,19 +73,17 @@ class SmartHome{
         public void statusCheck(){
             System.out.println("\nВывод статуса всех устройств: "); System.out.println("-------------------------------------");
             for (Device device : devices) {
-                if (device == null) {
-                    break;
-                } else {
-                    System.out.println("Статус устройства: " + device.getName() + " = " + device.getStatus());
-                    System.out.println("-------------------------------------");
-                }
+                System.out.println("Статус устройства: " + device.getName() + " = " + device.getStatus());
+                System.out.println("-------------------------------------");
             }
         }
     }
 
     public void infoDevice(String name){ // Вывод полной информации об устройстве
-        Info info = new Info(name);
-        info.OpenInfoDevice();
+        if (foundDevice(name)){ // Если устройство вообще есть
+            Info info = new Info(name);
+            info.OpenInfoDevice();
+        }
     }
 
     private class Info{
@@ -96,10 +97,45 @@ class SmartHome{
         public void OpenInfoDevice(){
             System.out.println("\nВывод полной информации об устройстве: ");
             for (Device device : devices) {
-                if (device != null && device.getName().equals(name)) {
+                if (device.getName().equals(name)) {
                     System.out.println("Имя устройства: " + device.getName() + "\nСтатус устройства: " + device.getStatus() + "\nЦвет устройства: " + device.getColor());
+                    break;
                 }
             }
         }
+    }
+
+    public void removeDevice(String name){ // Метод удаления устройства из списка
+        if (foundDevice(name)){ // Если устройство вообще есть
+            for (Device device : devices){
+                if (device.getName().equals(name)){
+                    devices.remove(device); // Удаление устройства из списка
+                    System.out.println("\nУстройство " + name + " удалено");
+                    break;
+                }
+            }
+        }
+    }
+    public boolean foundDevice(String name){
+        for (Device device : devices) {
+            if (device.getName().equals(name)) {
+                System.out.println("\nУстройство " + name + " найдно");
+                return true;
+            }
+        }
+        try {
+            throw new DeviceNotFoundException("Такого устройства в доме нету");
+        }
+        catch (Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Ошибка!", JOptionPane.ERROR_MESSAGE); // Вывод информации пользователю
+        }
+        return false;
+    }
+}
+
+class DeviceNotFoundException extends Exception{ // Создаем свою ошибку наследованную от суппер класс Exception
+
+    public DeviceNotFoundException(String txt){
+        super(txt); // Передаем аргумент нашему родителю
     }
 }
