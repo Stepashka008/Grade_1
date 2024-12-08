@@ -38,9 +38,12 @@ class SmartHome{
     }
 
     public void switchDevice(String name){ // Переключение статуса устройства
-        if (foundDevice(name)){ // Если устройство вообще есть
+        if (checkDevice(name)){ // Если устройство вообще есть
             Switc switc = new Switc(name);
             switc.switcElement();
+        }
+        else{
+            System.out.println("Такого устройства в доме нету");
         }
     }
 
@@ -80,9 +83,12 @@ class SmartHome{
     }
 
     public void infoDevice(String name){ // Вывод полной информации об устройстве
-        if (foundDevice(name)){ // Если устройство вообще есть
+        if (checkDevice(name)){ // Если устройство вообще есть
             Info info = new Info(name);
             info.OpenInfoDevice();
+        }
+        else{
+            System.out.println("Такого устройства в доме нету");
         }
     }
 
@@ -106,7 +112,7 @@ class SmartHome{
     }
 
     public void removeDevice(String name){ // Метод удаления устройства из списка
-        if (foundDevice(name)){ // Если устройство вообще есть
+        if (checkDevice(name)){ // Если устройство вообще есть
             for (Device device : devices){
                 if (device.getName().equals(name)){
                     devices.remove(device); // Удаление устройства из списка
@@ -115,12 +121,14 @@ class SmartHome{
                 }
             }
         }
+        else{
+            System.out.println("Такого устройства в доме нету");
+        }
     }
-    public boolean foundDevice(String name){
+    public void foundDevice(String name){ // Метод поиска устройства
         for (Device device : devices) {
             if (device.getName().equals(name)) {
-                System.out.println("\nУстройство " + name + " найдно");
-                return true;
+                System.out.println("\nУстройство " + name + " найдено");
             }
         }
         try {
@@ -128,6 +136,13 @@ class SmartHome{
         }
         catch (Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Ошибка!", JOptionPane.ERROR_MESSAGE); // Вывод информации пользователю
+        }
+    }
+    private boolean checkDevice(String name){ // Метод по проверки устройства в доме
+        for (Device device : devices) {
+            if (device.getName().equals(name)) {
+                return true;
+            }
         }
         return false;
     }
