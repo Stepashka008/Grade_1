@@ -16,7 +16,9 @@ class Main
 
         smartHome.removeDevice("Утюг"); // Удаление утюга из списка
         smartHome.statusCheckDevice(); // Вывод статуса всех устройств
-        smartHome.foundDevice("Плита"); // Поиск устройства
+        System.out.println("Устройство: " + smartHome.foundDevice("Плита").getName() + " найдено"); // Поиск устройства
         smartHome.foundDevice("Скамейка"); // Намеренный вызов ошибки
+
+        smartHome.ALlDevices(); // Вывод всех устройств
     }
 }

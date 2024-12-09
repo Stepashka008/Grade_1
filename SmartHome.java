@@ -1,8 +1,6 @@
 import javax.swing.JOptionPane;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
+
 class SmartHome{
 
     private int count = 0; // Кол-во устройств в доме
@@ -38,13 +36,8 @@ class SmartHome{
     }
 
     public void switchDevice(String name){ // Переключение статуса устройства
-        if (checkDevice(name)){ // Если устройство вообще есть
-            Switc switc = new Switc(name);
-            switc.switcElement();
-        }
-        else{
-            System.out.println("Такого устройства в доме нету");
-        }
+        Switc switc = new Switc(name);
+        switc.switcElement();
     }
 
     private class Switc{ // Класс для переключения статуса
@@ -56,13 +49,8 @@ class SmartHome{
         }
 
         public void switcElement(){
-            for (Device device : devices) { // foreach, device - наш объект
-                if (device.getName().equals(name)) { // equals - сравнение строк
-                    device.setStatus(!device.getStatus());
-                    System.out.println("\nСтатус устройства: " + device.getName() + ", переключён на: " + device.getStatus());
-                    break;
-                }
-            }
+            foundDevice(name).setStatus(!foundDevice(name).getStatus());
+            System.out.println("\nСтатус устройства: " + foundDevice(name).getName() + ", переключён на: " + foundDevice(name).getStatus());
         }
     }
 
@@ -83,13 +71,8 @@ class SmartHome{
     }
 
     public void infoDevice(String name){ // Вывод полной информации об устройстве
-        if (checkDevice(name)){ // Если устройство вообще есть
-            Info info = new Info(name);
-            info.OpenInfoDevice();
-        }
-        else{
-            System.out.println("Такого устройства в доме нету");
-        }
+        Info info = new Info(name);
+        info.OpenInfoDevice();
     }
 
     private class Info{
@@ -102,49 +85,52 @@ class SmartHome{
 
         public void OpenInfoDevice(){
             System.out.println("\nВывод полной информации об устройстве: ");
-            for (Device device : devices) {
-                if (device.getName().equals(name)) {
-                    System.out.println("Имя устройства: " + device.getName() + "\nСтатус устройства: " + device.getStatus() + "\nЦвет устройства: " + device.getColor());
-                    break;
-                }
-            }
+            System.out.println("Имя устройства: " + foundDevice(name).getName() + "\nСтатус устройства: " + foundDevice(name).getStatus() + "\nЦвет устройства: " + foundDevice(name).getColor());
         }
     }
 
     public void removeDevice(String name){ // Метод удаления устройства из списка
-        if (checkDevice(name)){ // Если устройство вообще есть
-            for (Device device : devices){
-                if (device.getName().equals(name)){
-                    devices.remove(device); // Удаление устройства из списка
-                    System.out.println("\nУстройство " + name + " удалено");
-                    break;
-                }
-            }
-        }
-        else{
-            System.out.println("Такого устройства в доме нету");
-        }
+        devices.remove(foundDevice(name)); // Удаление устройства из списка
+        System.out.println("\nУстройство " + name + " удалено");
     }
-    public void foundDevice(String name){ // Метод поиска устройства
+    public Device foundDevice(String name){ // Метод поиска устройства
         for (Device device : devices) {
             if (device.getName().equals(name)) {
-                System.out.println("\nУстройство " + name + " найдено");
+                return device;
             }
         }
         try {
-            throw new DeviceNotFoundException("Такого устройства в доме нету");
+            throw new DeviceNotFoundException("Устройства c названием " + name + " в доме нету");
         }
         catch (Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Ошибка!", JOptionPane.ERROR_MESSAGE); // Вывод информации пользователю
         }
+        return null;
     }
-    private boolean checkDevice(String name){ // Метод по проверки устройства в доме
-        for (Device device : devices) {
-            if (device.getName().equals(name)) {
-                return true;
-            }
+
+    public void ALlDevices(){ // Вывод всех устройств с помощью итератора
+        System.out.println("\nВывод всех устройств");
+        ExitDevice exitDevice = new ExitDevice(devices);
+    }
+
+    private class ExitDevice{
+
+        String text = "";
+        Iterator<Device> iterator;
+
+        public ExitDevice(List allDevice){
+            iterator = allDevice.listIterator(); // Перевод нашего списка устройств в итератор
+            infoDeviceExit(iterator);
         }
-        return false;
+
+        public void infoDeviceExit(Iterator<Device> iterator){
+            while (iterator.hasNext()){ // Проверка на следующий элемент
+                Device device = iterator.next();
+                text += "Имя: " + device.getName() + ", Цвет: " +  device.getColor() + ", Статус: " + device.getStatus() + "\n";
+            }
+            System.out.println(text);
+        }
+
     }
 }
 
