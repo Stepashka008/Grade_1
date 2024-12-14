@@ -1,15 +1,18 @@
 class Device{
 
-    private String name;
-    private boolean status;
-    private String color;
+    private String name; private String fixedName;
+    private boolean status; private boolean fixedStatus;
+    private String color; private String fixedColor;
 
     public Device(String name, boolean status, String color){
-        this.name = name;
-        this.status = status;
-        this.color = color;
+        this.name = name; fixedName = name;
+        this.status = status; fixedStatus = status;
+        this.color = color; fixedColor = color;
     }
 
+    public String getFixedName(){
+        return fixedName;
+    }
     public String getName(){
         return name;
     }
@@ -17,6 +20,9 @@ class Device{
         this.name = name;
     }
 
+    public boolean getFixedStatus(){
+        return fixedStatus;
+    }
     public boolean getStatus(){
         return status;
     }
@@ -24,6 +30,9 @@ class Device{
         this.status = status;
     }
 
+    public String getFixedColor(){
+        return fixedColor;
+    }
     public String getColor(){
         return color;
     }

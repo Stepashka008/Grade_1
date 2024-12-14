@@ -20,5 +20,11 @@ class Main
         smartHome.foundDevice("Скамейка"); // Намеренный вызов ошибки
 
         smartHome.ALlDevices(); // Вывод всех устройств
+
+        smartHome.changeSetting("Лампа"); // Применение настроек к устройству
+        smartHome.ALlDevices(); // Вывод всех устройств
+
+        smartHome.uploadDevice("Лампа"); // Возвращение к заводским настройкам
+        smartHome.ALlDevices(); // Вывод всех устройств
     }
 }

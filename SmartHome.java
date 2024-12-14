@@ -1,5 +1,6 @@
 import javax.swing.JOptionPane;
 import java.util.*;
+import java.util.stream.Stream;
 
 class SmartHome{
 
@@ -131,6 +132,44 @@ class SmartHome{
             System.out.println(text);
         }
 
+    }
+
+    public void changeSetting(String name){ // Метод настроек к устройству
+        DeviceAction deviceAction = () -> { // Лямбда выражение
+
+            Device dev = foundDevice(name);
+
+            System.out.print("Введите новое имя устройства: ");
+            dev.setName((new Scanner(System.in)).nextLine());
+
+            try {
+                System.out.print("Введите новый статус устройства: ");
+                dev.setStatus((new Scanner(System.in)).nextBoolean());
+            }
+            catch (Exception ex) {
+                System.out.print("Неверный ввод статуса - статус устройства остается \n");
+            }
+
+            System.out.print("Введите новый цвет устройства: ");
+            dev.setColor((new Scanner(System.in)).nextLine());
+        };
+        deviceAction.performAction();
+    }
+
+    public void uploadDevice(String name){ // Обновление состояния устройства на основе его настроек (возвращение к заводским настройкам)
+        System.out.println("Возвращение " + name + " к заводским настройкам");
+        Stream<Device> deviceStreamName = devices.stream(); // Создаем поток возвращение основного имени
+        deviceStreamName
+                .filter(device -> !device.getName().equals(device.getFixedName()) && (device.getName().equals(name) || device.getFixedName().equals(name))) // Если у нашего объекта не основное имя и если это наше устройство
+                .forEach(device -> device.setName(device.getFixedName()));
+        Stream<Device> deviceStreamStatus = devices.stream(); // Создаем поток возвращение основного статуса
+        deviceStreamStatus
+                .filter(device -> device.getStatus() != device.getFixedStatus() && (device.getName().equals(name) || device.getFixedName().equals(name))) // Если у нашего объекта не основной статус
+                .forEach(device -> device.setStatus(device.getFixedStatus()));
+        Stream<Device> deviceStreamColor = devices.stream(); // Создаем поток возвращение основного цвета
+        deviceStreamColor
+                .filter(device -> !device.getColor().equals(device.getFixedColor()) && (device.getName().equals(name) || device.getFixedName().equals(name))) // Если у нашего объекта не основной цвет
+                .forEach(device -> device.setColor(device.getFixedColor()));
     }
 }
 
