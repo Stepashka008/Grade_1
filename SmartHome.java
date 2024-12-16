@@ -13,8 +13,18 @@ class SmartHome{
     }
 
     public void addDevice(String name, boolean status,  String color){ // Добавление устройства в массив
-        Add add = new Add(name, status, color);
-        add.addElement();
+        boolean check = false;
+        for (Device dev: devices){
+            if (dev.getName().equals(name)) {
+                JOptionPane.showMessageDialog(null, "Данное устройство уже есть в доме", "Ошибка!", JOptionPane.ERROR_MESSAGE);
+                check = true;
+                break;
+            }
+        }
+        if (!check){
+            Add add = new Add(name, status, color);
+            add.addElement();
+        }
     }
 
     private class Add{ // Класс для добавления устройства
