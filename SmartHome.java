@@ -26,10 +26,6 @@ class SmartHome{
             Add add = new Add(name, status, color);
             add.addElement();
         }
-
-        // Просто создаем объект класса Device (Kotlin)
-        DeviceTo deviceTo = new DeviceTo(name, status, color);
-        System.out.println(deviceTo.getName() + " " + deviceTo.getStatus() + " " + deviceTo.getColor() + " - Kotlin");
     }
 
     private class Add{ // Класс для добавления устройства
